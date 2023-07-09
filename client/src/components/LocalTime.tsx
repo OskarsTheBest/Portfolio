@@ -39,8 +39,8 @@ function LocalTime() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="font-extrabold text-4xl ">{time}</div>
-      <div className="font-extralight justify">{date}</div>
+      <div className=" text-5xl ">{time}</div>
+      <div className="font-extralight text-xl justify">{date}</div>
       </div>
 
   );
