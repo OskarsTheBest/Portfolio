@@ -38,9 +38,9 @@ function LocalTime() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center">
-      <div className=" text-5xl ">{time}</div>
-      <div className="font-extralight text-xl justify">{date}</div>
+    <div className="flex flex-col items-center ">
+      <div className="noselect text-5xl outline-white ">{time}</div>
+      <div className="noselect font-extralight text-xl justify">{date}</div>
       </div>
 
   );

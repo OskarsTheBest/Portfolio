@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./Home.css";
 import LocalTime from "./components/LocalTime";
 import MouseWrap from "./components/MouseWrap";
+import $ from "jquery"; 
+
+let moving = false;
+let page = 1;
 
 function Home() {
   const [backgroundImage, setBackgroundImage] = useState(
@@ -18,6 +22,27 @@ function Home() {
     };
     image.src = backgroundImage;
   }, [backgroundImage]);
+
+  useEffect(() => {
+    const animationIteration = "animationiteration webkitAnimationIteration mozAnimationIteration oAnimationIteration oanimationiteration";
+    const transitionEnd = "transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd";
+
+    $(".load-more").on("click", function() {
+      if (moving === false) {
+        moving = true;
+        $(".load-more").addClass("active");
+        setTimeout(function() {
+          $(".load-more").one(animationIteration, function() {
+            $(".load-more").removeClass("active");
+            $(".load-more").one(transitionEnd, function() {
+              page++;
+              moving = false;
+            });
+          });
+        }, 2000);
+      }
+    });
+  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0) {
@@ -76,8 +101,9 @@ function Home() {
           <div>Project</div>
         </div>
       )}
-      <span className="load-right"></span>
-      <span className="load-left"></span>
+
+      <span className="load-right load-more"></span>
+      <span className="load-left load-more"></span>
     </div>
   );
 }
