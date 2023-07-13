@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./Home.css";
 import LocalTime from "./components/LocalTime";
 import MouseWrap from "./components/MouseWrap";
-import $ from "jquery"; 
+import $ from "jquery";
+import Phoneright from "./Phoneright";
 
 let moving = false;
 let page = 1;
@@ -11,9 +12,11 @@ function Home() {
   const [backgroundImage, setBackgroundImage] = useState(
     "https://picsum.photos/480/830"
   );
+  const [isRight, setisRight] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [initialMouseY, setInitialMouseY] = useState<number | null>(null);
+  const [displayPhoneright, setDisplayPhoneright] = useState(false);
 
   useEffect(() => {
     const image = new Image();
@@ -24,19 +27,22 @@ function Home() {
   }, [backgroundImage]);
 
   useEffect(() => {
-    const animationIteration = "animationiteration webkitAnimationIteration mozAnimationIteration oAnimationIteration oanimationiteration";
-    const transitionEnd = "transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd";
+    const animationIteration =
+      "animationiteration webkitAnimationIteration mozAnimationIteration oAnimationIteration oanimationiteration";
+    const transitionEnd =
+      "transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd";
 
-    $(".load-more").on("click", function() {
+    $(".load-right").on("click", function () {
       if (moving === false) {
         moving = true;
-        $(".load-more").addClass("active");
-        setTimeout(function() {
-          $(".load-more").one(animationIteration, function() {
-            $(".load-more").removeClass("active");
-            $(".load-more").one(transitionEnd, function() {
+        $(".load-right").addClass("active");
+        setTimeout(function () {
+          $(".load-right").one(animationIteration, function () {
+            $(".load-right").removeClass("active");
+            $(".load-right").one(transitionEnd, function () {
               page++;
               moving = false;
+              setDisplayPhoneright(true);
             });
           });
         }, 2000);
@@ -66,8 +72,20 @@ function Home() {
     setInitialMouseY(null);
   };
 
+  const handleBtnPress = (e: React.MouseEvent) => {
+    setisRight(true);
+  
+  };
+
   return (
     <div className="PhoneFront flex items-center justify-center h-screen">
+      { isRight ? (
+        <Phoneright />
+      ) : (
+
+      
+        <>
+      
       {!isUnlocked ? (
         <>
           {isLoading ? (
@@ -95,14 +113,21 @@ function Home() {
           )}
         </>
       ) : (
-        <div className="box-border h-5/6 w-3/12 p-4 border-8 rounded-md border-black bg-white">
-          {/* Content after unlocking */}
-          <div>About Me</div>
-          <div>Project</div>
-        </div>
+        <>
+          <div className="box-border h-5/6 w-3/12 p-4 border-8 rounded-md border-black bg-white">
+            {/* Content after unlocking */}
+            <div>About Me</div>
+            <div>Project</div>
+          </div>
+          {displayPhoneright && <Phoneright />}
+        </>
       )}
-
+      </>
+        
+      )}
+      <button onClick={handleBtnPress}>
       <span className="load-right load-more"></span>
+      </button>
       <span className="load-left load-more"></span>
     </div>
   );
