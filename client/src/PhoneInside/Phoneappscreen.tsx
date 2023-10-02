@@ -43,6 +43,11 @@ function Phoneappscreen() {
           <p>App 6</p>
         </div>
       </div>
+      <div className="fixed inset-x-0 bottom-0 flex justify-center mb-4 py-20">
+        <div className="bg-gray-900 rounded-full p-3">
+          <div className="bg-slate-700 w-12 h-12 rounded-full"></div>
+        </div>
+      </div>
     </div>
   )
 }

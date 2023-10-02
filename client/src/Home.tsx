@@ -3,6 +3,9 @@ import "./Home.css";
 import LocalTime from "./components/LocalTime";
 import MouseWrap from "./components/MouseWrap";
 import Phonescreen from "./PhoneInside/Phonescreen";
+import PhoneRight from "./Phoneright";
+import PhoneBack from "./Phoneback";
+import PhoneLeft from "./Phoneleft";
 import $ from "jquery";
 
 function Home() {
@@ -15,44 +18,35 @@ function Home() {
   let moving = false;
   let page = 0;
   
+  const screens = [<Phonescreen />, <PhoneRight />, <PhoneBack />, <PhoneLeft />];
+  const [currentScreen, setCurrentScreen] = useState(screens[0]);
 
+  const animationIteration =
+    "animationiteration webkitAnimationIteration mozAnimationIteration oAnimationIteration oanimationiteration";
+  const transitionEnd =
+    "transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd";
 
-  //btn animation
-  useEffect(() => {
-    const animationIteration =
-      "animationiteration webkitAnimationIteration mozAnimationIteration oAnimationIteration oanimationiteration";
-    const transitionEnd =
-      "transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd";
-  
-    const handleLoadClick = (direction: 'right' | 'left') => {
-      if (moving === false) {
-        moving = true;
-        $(`.load-${direction}`).addClass("active");
-        setTimeout(function () {
-          $(`.load-${direction}`).one(animationIteration, function () {
-            $(`.load-${direction}`).removeClass("active");
-            $(`.load-${direction}`).one(transitionEnd, function () {
-              if (direction === 'right') {
-                page++;
-              } else if (direction === 'left') {
-                page--;
-              }
-              moving = false;
-            });
+  const handleLoadClick = (direction: 'right' | 'left') => {
+    if (moving === false) {
+      moving = true;
+      $(`.load-${direction}`).addClass("active");
+      setTimeout(function () {
+        $(`.load-${direction}`).one(animationIteration, function () {
+          $(`.load-${direction}`).removeClass("active");
+          $(`.load-${direction}`).one(transitionEnd, function () {
+            if (direction === 'right') {
+              page = (page + 1) % screens.length;
+            } else if (direction === 'left') {
+              page = (page - 1 + screens.length) % screens.length;
+            }
+            setCurrentScreen(screens[page]);
+            moving = false;
           });
-        }, 2000);
-      }
-    };
-  
-    $(".load-right").on("click", function () {
-      handleLoadClick('right');
-    });
-  
-    $(".load-left").on("click", function () {
-      handleLoadClick('left');
-    });
-  }, []);
-  
+        });
+      }, 2000);
+    }
+  };
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0) {
       // Only trigger when the left mouse button is pressed
@@ -115,15 +109,15 @@ function Home() {
         <>
           <div className="box-border h-5/6 w-3/12 p-4 border-8 rounded-md border-black bg-white">
             {/* Content after unlocking */}
-            <Phonescreen></Phonescreen>
+            {currentScreen}
           </div>
           </>
       )}
           {/* Buttons for further actions */}
-          <button>
+          <button onClick={() => handleLoadClick('right')}>
             <span className="load-right load-more"></span>
           </button>
-          <button>
+          <button onClick={() => handleLoadClick('left')}>
             <span className="load-left load-more"></span>
           </button>
 
